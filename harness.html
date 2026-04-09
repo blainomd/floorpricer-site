@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloorPricer Harness — Full Feature Reference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --green: #0d9488; --green-lt: #14b8a6; --green-dark: #065f46;
+            --gold: #f59e0b; --red: #ef4444;
+            --bg: #0f172a; --surface: #1e293b; --surface2: #263348;
+            --border: rgba(255,255,255,0.07);
+            --text: #e2e8f0; --muted: #64748b; --dim: #94a3b8;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* NAV */
+        nav { background: rgba(15,23,42,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--green-lt); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .nav-back { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+        .nav-back:hover { color: var(--green-lt); }
+
+        /* HERO */
+        .page-hero { padding: 72px 24px 56px; background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #0c4a45 100%); border-bottom: 1px solid var(--border); text-align: center; }
+        .page-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #fff; margin-bottom: 12px; }
+        .page-hero p { color: var(--dim); font-size: 1.1rem; max-width: 560px; margin: 0 auto 32px; }
+        .badge-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .badge { font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 99px; letter-spacing: 0.04em; }
+        .badge-green  { background: rgba(13,148,136,0.15); color: #34d399; border: 1px solid rgba(13,148,136,0.3); }
+        .badge-gold   { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+        .badge-purple { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.25); }
+
+        /* SETUP STEPS */
+        .setup { max-width: 900px; margin: 0 auto; padding: 64px 24px; }
+        .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-lt); margin-bottom: 10px; }
+        .section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .section-sub { color: var(--dim); margin-bottom: 40px; }
+        .steps { display: flex; flex-direction: column; gap: 16px; }
+        .step { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; gap: 20px; align-items: flex-start; }
+        .step-num { width: 32px; height: 32px; border-radius: 50%; background: rgba(13,148,136,0.15); border: 1.5px solid var(--green); color: var(--green-lt); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .step-body h3 { font-weight: 700; color: #fff; margin-bottom: 6px; font-size: 15px; }
+        .step-body p  { color: var(--dim); font-size: 14px; line-height: 1.6; }
+        .step-body a  { color: var(--green-lt); }
+        code { font-family: 'JetBrains Mono', monospace; background: rgba(13,148,136,0.1); color: #34d399; padding: 2px 7px; border-radius: 5px; font-size: 12px; }
+
+        /* TOOL GRID */
+        .tools-section { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+        .cat-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 16px; margin-top: 48px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+        .tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+        .tool-card:hover { border-color: rgba(13,148,136,0.4); transform: translateY(-2px); }
+        .tool-card.open { border-color: var(--green); }
+        .tool-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .tool-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+        .tool-name { font-weight: 700; color: #fff; font-size: 14px; font-family: 'JetBrains Mono', monospace; }
+        .tool-desc { font-size: 13px; color: var(--dim); line-height: 1.5; }
+        .tool-detail { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .tool-card.open .tool-detail { display: block; }
+        .prompt-block { background: #0d1117; border: 1px solid rgba(13,148,136,0.2); border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+        .prompt-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+        .prompt-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #34d399; line-height: 1.6; }
+        .copy-btn { margin-top: 8px; font-size: 11px; font-weight: 600; color: var(--green-lt); background: none; border: none; cursor: pointer; padding: 0; letter-spacing: 0.03em; transition: color 0.2s; }
+        .copy-btn:hover { color: #fff; }
+        .params { margin-top: 12px; }
+        .param-row { display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px; font-size: 12px; }
+        .param-name { font-family: 'JetBrains Mono', monospace; color: #a78bfa; }
+        .param-type { color: var(--muted); }
+        .param-desc { color: var(--dim); }
+
+        /* CLAUDE CONFIG */
+        .config-section { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+        .config-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+        pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #34d399; line-height: 1.8; white-space: pre-wrap; word-break: break-all; }
+
+        /* STRATEGY RECIPES */
+        .recipes { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+        .recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 16px; }
+        .recipe-title { font-weight: 700; color: #fff; font-size: 16px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+        .recipe-sub { color: var(--dim); font-size: 13px; margin-bottom: 16px; }
+        .recipe-steps { display: flex; flex-direction: column; gap: 8px; }
+        .recipe-step { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; }
+        .recipe-arrow { color: var(--green-lt); font-size: 11px; margin-top: 3px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; color: var(--muted); font-size: 13px; }
+        footer a { color: var(--green-lt); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+            <svg width="20" height="20" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="20" fill="#0d9488"/><path d="M20 65 L40 35 L55 50 L80 25" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="80" cy="25" r="6" fill="#34d399"/></svg>
+            FloorPricer
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+            Back to site
+        </a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+    <h1>The FloorPricer Harness</h1>
+    <p>Every tool, every strategy, every Claude prompt. Connect your Alpaca account and start automating in 5 minutes.</p>
+    <div class="badge-row">
+        <span class="badge badge-green">13 MCP Tools</span>
+        <span class="badge badge-gold">Paper + Live Trading</span>
+        <span class="badge badge-purple">Alpaca + Claude</span>
+    </div>
+</div>
+
+<!-- SETUP -->
+<div class="setup" id="setup">
+    <div class="section-label">Getting Started</div>
+    <h2 class="section-title">Connect in 5 minutes</h2>
+    <p class="section-sub">You need three things: Alpaca account, Claude subscription, and the FloorPricer MCP.</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <h3>Create a free Alpaca paper trading account</h3>
+                <p>Go to <a href="https://app.alpaca.markets/signup" target="_blank">app.alpaca.markets/signup</a> — free forever for paper trading. Get your <code>APCA-API-KEY-ID</code> and <code>APCA-API-SECRET-KEY</code> from the dashboard under API Keys.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <h3>Install the FloorPricer MCP</h3>
+                <p>Clone or install via npm. Set your Alpaca keys as environment variables:<br>
+                <code>ALPACA_KEY_ID=your_key</code> &nbsp; <code>ALPACA_SECRET_KEY=your_secret</code> &nbsp; <code>ALPACA_PAPER=true</code></p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <h3>Add FloorPricer to your Claude config</h3>
+                <p>Add the MCP server to <code>~/.claude/claude_desktop_config.json</code> or your Claude Code settings. See the config block below.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+                <h3>Start a conversation with Claude</h3>
+                <p>Open Claude and say: <em>"Connect my FloorPricer and show me my dashboard"</em> — Claude will call <code>dashboard</code> and you'll see your $100K paper account balance live.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CLAUDE CONFIG -->
+<div class="config-section" id="config">
+    <div class="section-label">Configuration</div>
+    <h2 class="section-title">claude_desktop_config.json</h2>
+    <p class="section-sub" style="margin-bottom: 20px;">Add this to your Claude Desktop or Claude Code MCP config:</p>
+    <div class="config-block">
+<pre>{
+  "mcpServers": {
+    "floorpricer": {
+      "command": "node",
+      "args": ["/path/to/floorpricer-mcp/dist/index.js"],
+      "env": {
+        "ALPACA_KEY_ID": "your_alpaca_key_id",
+        "ALPACA_SECRET_KEY": "your_alpaca_secret",
+        "ALPACA_PAPER": "true"
+      }
+    }
+  }
+}</pre>
+    </div>
+    <p style="color: var(--muted); font-size: 13px; margin-top: 12px;">Set <code>ALPACA_PAPER</code> to <code>false</code> when you're ready for live trading with real money.</p>
+</div>
+
+<!-- ALL TOOLS -->
+<div class="tools-section" id="tools">
+    <div class="section-label">All 13 Tools</div>
+    <h2 class="section-title">Full Tool Reference</h2>
+    <p class="section-sub" style="margin-bottom: 0;">Click any tool to see parameters and copy-paste Claude prompts.</p>
+
+    <!-- Account & Market -->
+    <div class="cat-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Account & Market
+    </div>
+    <div class="tool-grid">
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(13,148,136,0.15);">💼</div>
+                <span class="tool-name">get_account</span>
+            </div>
+            <div class="tool-desc">Account balance, buying power, equity, and total P&L.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Show me my account balance and buying power</div>
+                    <button class="copy-btn" onclick="copy(event, 'Show me my account balance and buying power')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(13,148,136,0.15);">🏪</div>
+                <span class="tool-name">get_market_status</span>
+            </div>
+            <div class="tool-desc">Is the market open right now? Hours, pre/post market status.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Is the market open? What are today's trading hours?</div>
+                    <button class="copy-btn" onclick="copy(event, 'Is the market open? What are today\'s trading hours?')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(245,158,11,0.12);">📊</div>
+                <span class="tool-name">dashboard</span>
+            </div>
+            <div class="tool-desc">The one-stop overview: account + positions + all active floors and ladders + market status in a single call.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Give me my full FloorPricer dashboard</div>
+                    <button class="copy-btn" onclick="copy(event, 'Give me my full FloorPricer dashboard')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(13,148,136,0.15);">💹</div>
+                <span class="tool-name">get_quote</span>
+            </div>
+            <div class="tool-desc">Live price quote for any stock symbol.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div class="param-row"><span class="param-name">symbol</span><span class="param-type">string*</span><span class="param-desc">— Ticker symbol, e.g. NVDA</span></div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">What's the current price of NVDA?</div>
+                    <button class="copy-btn" onclick="copy(event, 'What\'s the current price of NVDA?')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Positions & Orders -->
+    <div class="cat-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        Positions & Orders
+    </div>
+    <div class="tool-grid">
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(52,211,153,0.1);">📈</div>
+                <span class="tool-name">get_positions</span>
+            </div>
+            <div class="tool-desc">All open positions with current value, cost basis, and unrealized P&L.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Show me all my open positions and their P&L</div>
+                    <button class="copy-btn" onclick="copy(event, 'Show me all my open positions and their P&L')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(52,211,153,0.1);">📋</div>
+                <span class="tool-name">get_orders</span>
+            </div>
+            <div class="tool-desc">Recent order history — filled, open, and cancelled orders.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Show me my recent orders including any that were cancelled</div>
+                    <button class="copy-btn" onclick="copy(event, 'Show me my recent orders including any that were cancelled')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(52,211,153,0.1);">🟢</div>
+                <span class="tool-name">buy_stock</span>
+            </div>
+            <div class="tool-desc">Buy shares. Supports market and limit orders.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div class="param-row"><span class="param-name">symbol</span><span class="param-type">string*</span><span class="param-desc">— Ticker, e.g. AAPL</span></div>
+                    <div class="param-row"><span class="param-name">qty</span><span class="param-type">number*</span><span class="param-desc">— Number of shares</span></div>
+                    <div class="param-row"><span class="param-name">order_type</span><span class="param-type">string</span><span class="param-desc">— "market" or "limit" (default: market)</span></div>
+                    <div class="param-row"><span class="param-name">limit_price</span><span class="param-type">number</span><span class="param-desc">— Required if order_type is limit</span></div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Buy 10 shares of AAPL at market price</div>
+                    <button class="copy-btn" onclick="copy(event, 'Buy 10 shares of AAPL at market price')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(239,68,68,0.1);">🔴</div>
+                <span class="tool-name">sell_stock</span>
+            </div>
+            <div class="tool-desc">Sell shares. Supports market and limit orders.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div class="param-row"><span class="param-name">symbol</span><span class="param-type">string*</span><span class="param-desc">— Ticker</span></div>
+                    <div class="param-row"><span class="param-name">qty</span><span class="param-type">number*</span><span class="param-desc">— Shares to sell</span></div>
+                    <div class="param-row"><span class="param-name">order_type</span><span class="param-type">string</span><span class="param-desc">— "market" or "limit"</span></div>
+                    <div class="param-row"><span class="param-name">limit_price</span><span class="param-type">number</span><span class="param-desc">— Required if limit order</span></div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Sell 5 shares of TSLA at market price</div>
+                    <button class="copy-btn" onclick="copy(event, 'Sell 5 shares of TSLA at market price')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floor Strategy -->
+    <div class="cat-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        Trailing Stop (Floor) Strategy
+    </div>
+    <div class="tool-grid">
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(245,158,11,0.12);">🏔️</div>
+                <span class="tool-name">set_trailing_stop</span>
+            </div>
+            <div class="tool-desc">Set a trailing stop on a position. The floor only moves UP. If price drops below the floor, auto-sell triggers. Core FloorPricer strategy.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div class="param-row"><span class="param-name">symbol</span><span class="param-type">string*</span><span class="param-desc">— Ticker</span></div>
+                    <div class="param-row"><span class="param-name">trail_percent</span><span class="param-type">number*</span><span class="param-desc">— e.g. 5 means sell if drops 5% from peak</span></div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Set a 7% trailing stop on my NVDA position</div>
+                    <button class="copy-btn" onclick="copy(event, 'Set a 7% trailing stop on my NVDA position')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(245,158,11,0.12);">🔍</div>
+                <span class="tool-name">check_floors</span>
+            </div>
+            <div class="tool-desc">Check all active trailing stops. Raises floors if prices climbed. Triggers auto-sell if price dropped below floor. Run on a schedule every 5 min during market hours.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Check all my floors — raise any that have moved up and sell any that have broken</div>
+                    <button class="copy-btn" onclick="copy(event, 'Check all my floors — raise any that have moved up and sell any that have broken')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(245,158,11,0.12);">📜</div>
+                <span class="tool-name">get_floor_history</span>
+            </div>
+            <div class="tool-desc">Full history of a trailing stop — every time the floor was raised as the stock climbed.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div class="param-row"><span class="param-name">symbol</span><span class="param-type">string*</span><span class="param-desc">— Ticker to inspect</span></div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Show me the full floor history for AAPL — every time my floor was raised</div>
+                    <button class="copy-btn" onclick="copy(event, 'Show me the full floor history for AAPL — every time my floor was raised')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Ladder Strategy -->
+    <div class="cat-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/><line x1="6" y1="3" x2="6" y2="21"/><line x1="18" y1="3" x2="18" y2="21"/></svg>
+        Ladder Buy Strategy
+    </div>
+    <div class="tool-grid">
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(139,92,246,0.12);">🪜</div>
+                <span class="tool-name">set_ladder_buy</span>
+            </div>
+            <div class="tool-desc">Set ladder buy orders at decreasing price levels. If a stock dips, buy more at each rung to average down your cost basis.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div class="param-row"><span class="param-name">symbol</span><span class="param-type">string*</span><span class="param-desc">— Ticker</span></div>
+                    <div class="param-row"><span class="param-name">rungs</span><span class="param-type">array*</span><span class="param-desc">— Array of {price, qty} objects</span></div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Set a ladder buy on SPY: 5 shares at $510, 10 shares at $500, 20 shares at $490</div>
+                    <button class="copy-btn" onclick="copy(event, 'Set a ladder buy on SPY: 5 shares at $510, 10 shares at $500, 20 shares at $490')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="toggle(this)">
+            <div class="tool-header">
+                <div class="tool-icon" style="background:rgba(139,92,246,0.12);">⚙️</div>
+                <span class="tool-name">check_ladders</span>
+            </div>
+            <div class="tool-desc">Check all active ladder buys. Executes buy orders when prices hit target levels. Run on a schedule during market hours.</div>
+            <div class="tool-detail">
+                <div class="params">
+                    <div style="font-size:12px; color: var(--muted); font-style: italic;">No parameters required.</div>
+                </div>
+                <div class="prompt-block">
+                    <div class="prompt-label">Example prompt</div>
+                    <div class="prompt-text">Check my ladders — execute any rung buys that have been triggered</div>
+                    <button class="copy-btn" onclick="copy(event, 'Check my ladders — execute any rung buys that have been triggered')">Copy prompt</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- STRATEGY RECIPES -->
+<div class="recipes" id="recipes">
+    <div class="section-label">Strategy Recipes</div>
+    <h2 class="section-title">Complete workflows</h2>
+    <p class="section-sub" style="margin-bottom: 32px;">Copy these multi-step prompts directly into Claude.</p>
+
+    <div class="recipe-card">
+        <div class="recipe-title">
+            <span style="font-size:20px;">🏔️</span>
+            Morning Floor Check Routine
+        </div>
+        <div class="recipe-sub">Run this every morning before market open. Takes 30 seconds.</div>
+        <div class="prompt-block">
+            <div class="prompt-label">Copy this prompt</div>
+            <div class="prompt-text">Good morning. Run my FloorPricer morning routine: 1) Check market status, 2) Show my dashboard, 3) Check all floors and raise any that moved up overnight, 4) Check all ladders for any triggered buys. Give me a summary of what happened.</div>
+            <button class="copy-btn" onclick="copy(event, 'Good morning. Run my FloorPricer morning routine: 1) Check market status, 2) Show my dashboard, 3) Check all floors and raise any that moved up overnight, 4) Check all ladders for any triggered buys. Give me a summary of what happened.')">Copy prompt</button>
+        </div>
+    </div>
+
+    <div class="recipe-card">
+        <div class="recipe-title">
+            <span style="font-size:20px;">🪜</span>
+            Buy the Dip — Ladder Entry
+        </div>
+        <div class="recipe-sub">Enter a position with a 3-rung ladder so you buy more as it falls.</div>
+        <div class="prompt-block">
+            <div class="prompt-label">Copy this prompt (edit ticker + prices)</div>
+            <div class="prompt-text">Get me a quote for NVDA, then set a 3-rung ladder: 5 shares at 5% below current price, 10 shares at 10% below, 20 shares at 15% below. Then set a 8% trailing stop on any existing NVDA position.</div>
+            <button class="copy-btn" onclick="copy(event, 'Get me a quote for NVDA, then set a 3-rung ladder: 5 shares at 5% below current price, 10 shares at 10% below, 20 shares at 15% below. Then set a 8% trailing stop on any existing NVDA position.')">Copy prompt</button>
+        </div>
+    </div>
+
+    <div class="recipe-card">
+        <div class="recipe-title">
+            <span style="font-size:20px;">🏆</span>
+            Compete on the Leaderboard
+        </div>
+        <div class="recipe-sub">Build your paper portfolio and track your daily gain %.</div>
+        <div class="prompt-block">
+            <div class="prompt-label">Copy this prompt</div>
+            <div class="prompt-text">Show me my dashboard. Calculate my total gain/loss percentage today compared to my $100,000 starting paper balance. What's my best performing position? What single trade has been my biggest winner so far?</div>
+            <button class="copy-btn" onclick="copy(event, 'Show me my dashboard. Calculate my total gain/loss percentage today compared to my $100,000 starting paper balance. What\'s my best performing position? What single trade has been my biggest winner so far?')">Copy prompt</button>
+        </div>
+    </div>
+
+    <div class="recipe-card">
+        <div class="recipe-title">
+            <span style="font-size:20px;">🔒</span>
+            Lock In Gains — Protect All Positions
+        </div>
+        <div class="recipe-sub">One prompt to set trailing stops on everything you own.</div>
+        <div class="prompt-block">
+            <div class="prompt-label">Copy this prompt</div>
+            <div class="prompt-text">Show me all my positions. For any position that's up more than 5%, set a 6% trailing stop. For any position that's up more than 15%, set a 10% trailing stop. Tell me what you set and what floors you established.</div>
+            <button class="copy-btn" onclick="copy(event, 'Show me all my positions. For any position that\'s up more than 5%, set a 6% trailing stop. For any position that\'s up more than 15%, set a 10% trailing stop. Tell me what you set and what floors you established.')">Copy prompt</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p><a href="index.html">FloorPricer</a> &mdash; Wall Street Tools, Main Street Values &mdash; <a href="https://app.alpaca.markets/signup" target="_blank">Start Paper Trading Free</a></p>
+</footer>
+
+<script>
+function toggle(card) {
+    const wasOpen = card.classList.contains('open');
+    document.querySelectorAll('.tool-card.open').forEach(c => c.classList.remove('open'));
+    if (!wasOpen) card.classList.add('open');
+}
+
+function copy(e, text) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = e.target;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy prompt', 1500);
+    });
+}
+</script>
+</body>
+</html>
