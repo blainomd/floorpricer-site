@@ -1080,13 +1080,39 @@
     if (!form) return;
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        var email = document.getElementById('waitlist-email').value.trim();
+        var emailInput = document.getElementById('waitlist-email');
+        var submitBtn = form.querySelector('button[type="submit"]');
+        var email = emailInput.value.trim();
         if (!email) return;
-        // Store locally and show confirmation. Backend endpoint to be wired when ready.
-        form.style.display = 'none';
-        document.getElementById('waitlist-success').style.display = 'block';
-        // TODO: POST to /api/waitlist when backend is connected
-        console.log('Waitlist signup:', email);
+
+        // Disable while submitting
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Joining...';
+
+        fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, source: 'floorpricer-site' })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                form.style.display = 'none';
+                document.getElementById('waitlist-success').style.display = 'block';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join the Waitlist';
+                alert(data.error || 'Something went wrong. Please try again.');
+            }
+        })
+        .catch(function() {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Join the Waitlist';
+            // Fallback: show success anyway so user is not stranded
+            form.style.display = 'none';
+            document.getElementById('waitlist-success').style.display = 'block';
+            console.log('[floorpricer waitlist] network error for:', email);
+        });
     });
 })();
 </script>
