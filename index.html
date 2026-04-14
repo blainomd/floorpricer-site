@@ -286,6 +286,148 @@
             margin-top: 4px;
         }
 
+        /* ===== LIVE DEMO PORTFOLIO ===== */
+        .live-portfolio {
+            margin-top: 48px;
+            background: rgba(2, 6, 23, 0.55);
+            border: 1px solid rgba(16, 185, 129, 0.22);
+            border-radius: 16px;
+            padding: 20px 22px 22px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+        }
+        .live-portfolio-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .live-portfolio-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.72);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 0 rgba(16,185,129,0.6);
+            animation: livepulse 1.8s ease-out infinite;
+        }
+        @keyframes livepulse {
+            0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.55); }
+            70%  { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+            100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+        }
+        .live-portfolio-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.45);
+        }
+        .live-portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+        @media (max-width: 860px) {
+            .live-portfolio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        .lp-card {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 14px 14px 12px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .lp-card.flash-up { animation: flashup 0.7s ease-out; }
+        .lp-card.flash-dn { animation: flashdn 0.7s ease-out; }
+        @keyframes flashup {
+            0%   { background: rgba(16,185,129,0.25); }
+            100% { background: rgba(15,23,42,0.75); }
+        }
+        @keyframes flashdn {
+            0%   { background: rgba(239,68,68,0.22); }
+            100% { background: rgba(15,23,42,0.75); }
+        }
+        .lp-symbol {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .lp-ticker {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+        .lp-chg {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+        .lp-chg.up   { color: #10b981; background: rgba(16,185,129,0.12); }
+        .lp-chg.dn   { color: #f87171; background: rgba(239,68,68,0.12); }
+        .lp-chg.flat { color: #94a3b8; background: rgba(148,163,184,0.12); }
+        .lp-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1.35rem;
+            color: #fff;
+            line-height: 1.1;
+        }
+        .lp-floor-row {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+        .lp-floor-label {
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .lp-floor-val {
+            color: #14b8a6;
+            font-weight: 600;
+        }
+        .lp-bar {
+            margin-top: 8px;
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        .lp-bar-fill {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            background: linear-gradient(90deg, #14b8a6, #10b981);
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+        .lp-cushion {
+            margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.5);
+        }
+
         /* ===== SECTIONS ===== */
         section { padding: 100px 0; }
 
@@ -798,6 +940,47 @@
                 <div class="hero-stat-label">Your keys. Your control.</div>
             </div>
         </div>
+
+        <!-- LIVE DEMO PORTFOLIO -->
+        <div class="live-portfolio" id="live-portfolio" aria-label="Live demo portfolio">
+            <div class="live-portfolio-head">
+                <div class="live-portfolio-title">
+                    <span class="live-dot"></span>
+                    Live Demo Portfolio &middot; 10% Trailing Floor
+                </div>
+                <div class="live-portfolio-meta" id="lp-meta">connecting…</div>
+            </div>
+            <div class="live-portfolio-grid" id="lp-grid">
+                <div class="lp-card" data-sym="TSLA">
+                    <div class="lp-symbol"><span class="lp-ticker">TSLA</span><span class="lp-chg flat">—</span></div>
+                    <div class="lp-price">$—</div>
+                    <div class="lp-floor-row"><span class="lp-floor-label">Floor</span><span class="lp-floor-val">$—</span></div>
+                    <div class="lp-bar"><div class="lp-bar-fill"></div></div>
+                    <div class="lp-cushion">cushion —</div>
+                </div>
+                <div class="lp-card" data-sym="NVDA">
+                    <div class="lp-symbol"><span class="lp-ticker">NVDA</span><span class="lp-chg flat">—</span></div>
+                    <div class="lp-price">$—</div>
+                    <div class="lp-floor-row"><span class="lp-floor-label">Floor</span><span class="lp-floor-val">$—</span></div>
+                    <div class="lp-bar"><div class="lp-bar-fill"></div></div>
+                    <div class="lp-cushion">cushion —</div>
+                </div>
+                <div class="lp-card" data-sym="AAPL">
+                    <div class="lp-symbol"><span class="lp-ticker">AAPL</span><span class="lp-chg flat">—</span></div>
+                    <div class="lp-price">$—</div>
+                    <div class="lp-floor-row"><span class="lp-floor-label">Floor</span><span class="lp-floor-val">$—</span></div>
+                    <div class="lp-bar"><div class="lp-bar-fill"></div></div>
+                    <div class="lp-cushion">cushion —</div>
+                </div>
+                <div class="lp-card" data-sym="SPY">
+                    <div class="lp-symbol"><span class="lp-ticker">SPY</span><span class="lp-chg flat">—</span></div>
+                    <div class="lp-price">$—</div>
+                    <div class="lp-floor-row"><span class="lp-floor-label">Floor</span><span class="lp-floor-val">$—</span></div>
+                    <div class="lp-bar"><div class="lp-bar-fill"></div></div>
+                    <div class="lp-cushion">cushion —</div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -1145,6 +1328,94 @@
     window.addEventListener('scroll', () => {
         document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
     });
+</script>
+
+<script>
+// ===== LIVE DEMO PORTFOLIO =====
+// Fetches real quotes via /api/quotes (Stooq proxy) and renders a
+// 10% trailing-floor view for TSLA / NVDA / AAPL / SPY. Floor ratchets
+// up in-session and is persisted in localStorage so returning visitors
+// see the "floor only moves up" thesis in action.
+(function () {
+    var SYMBOLS = ['TSLA', 'NVDA', 'AAPL', 'SPY'];
+    var FLOOR_PCT = 0.10; // 10% trailing
+    var STORE_KEY = 'fp_demo_floors_v1';
+    var grid = document.getElementById('lp-grid');
+    var meta = document.getElementById('lp-meta');
+    if (!grid || !meta) return;
+
+    function loadFloors() {
+        try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
+        catch (e) { return {}; }
+    }
+    function saveFloors(f) {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(f)); } catch (e) {}
+    }
+    var floors = loadFloors();
+    var lastPrices = {};
+
+    function fmt(n) {
+        if (!Number.isFinite(n)) return '—';
+        return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function render(q) {
+        var card = grid.querySelector('[data-sym="' + q.symbol + '"]');
+        if (!card || q.error || !Number.isFinite(q.price)) return;
+
+        // Trailing floor: highest-seen * (1 - 10%). Only moves up.
+        var prevFloor = floors[q.symbol] || 0;
+        var candidate = q.price * (1 - FLOOR_PCT);
+        var floor = Math.max(prevFloor, candidate);
+        if (floor !== prevFloor) {
+            floors[q.symbol] = floor;
+            saveFloors(floors);
+        }
+
+        // Cushion: how far price is above the floor, in % of price.
+        var cushion = q.price > 0 ? ((q.price - floor) / q.price) * 100 : 0;
+        var barPct = Math.max(0, Math.min(100, cushion * 10)); // 10% cushion = full bar
+
+        card.querySelector('.lp-price').textContent = fmt(q.price);
+        card.querySelector('.lp-floor-val').textContent = fmt(floor);
+        card.querySelector('.lp-bar-fill').style.width = barPct.toFixed(1) + '%';
+        card.querySelector('.lp-cushion').textContent =
+            'cushion ' + cushion.toFixed(2) + '% above floor';
+
+        var chg = card.querySelector('.lp-chg');
+        var pct = Number.isFinite(q.changePct) ? q.changePct : 0;
+        chg.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+        chg.classList.remove('up', 'dn', 'flat');
+        chg.classList.add(pct > 0 ? 'up' : (pct < 0 ? 'dn' : 'flat'));
+
+        // Flash on price tick
+        var prev = lastPrices[q.symbol];
+        if (Number.isFinite(prev) && prev !== q.price) {
+            card.classList.remove('flash-up', 'flash-dn');
+            void card.offsetWidth; // restart animation
+            card.classList.add(q.price > prev ? 'flash-up' : 'flash-dn');
+        }
+        lastPrices[q.symbol] = q.price;
+    }
+
+    function tick() {
+        fetch('/api/quotes?symbols=' + SYMBOLS.join(','))
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (data) {
+                if (!data || !Array.isArray(data.quotes)) return;
+                data.quotes.forEach(render);
+                var d = new Date();
+                meta.textContent = 'live · updated ' +
+                    d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            })
+            .catch(function () {
+                meta.textContent = 'offline · retrying';
+            });
+    }
+
+    tick();
+    setInterval(tick, 30000);
+})();
 </script>
 
 <script src="footer.js"></script>
