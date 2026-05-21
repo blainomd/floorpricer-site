@@ -905,6 +905,12 @@
     </div>
 </nav>
 
+<!-- DISCLAIMER BAR -->
+<div style="background:#1e293b;border-bottom:1px solid rgba(239,68,68,0.25);padding:10px 24px;text-align:center;font-size:0.78rem;color:#94a3b8;line-height:1.5;">
+  <strong style="color:#f87171;">Not investment advice.</strong>&nbsp;
+  FloorPricer is a trade-execution tool, not a financial advisor. Past strategy performance does not predict future results. All live trading involves risk of loss. Paper trading only until you fully understand the strategy. See <a href="#risk" style="color:#94a3b8;text-decoration:underline;">full risk disclosure</a> below.
+</div>
+
 <!-- HERO -->
 <section class="hero">
     <div class="hero-inner">
@@ -913,7 +919,7 @@
             Open Source Trading Harness
         </div>
         <h1>Your floor only<br><span class="hero-green">moves up.</span></h1>
-        <p>AI-powered trailing stops that lock in your gains and cap your losses. The floor rises as your stock climbs. If it drops, you're protected. Your keys, your rules.</p>
+        <p>Automated trailing stops that raise your floor as your position climbs and execute a market sell if the floor is breached. You configure the rules. The harness runs them. Your keys, your brokerage, your decisions.</p>
         <div class="hero-ctas">
             <a href="#waitlist" class="btn-primary">
                 Join the Waitlist
@@ -990,7 +996,8 @@
             How It Works
         </div>
         <h2 class="section-title">Your Claude. Your brokerage. Connected.</h2>
-        <p class="section-subtitle">FloorPricer is a Claude MCP connector. You bring your own Claude subscription and brokerage API keys. We provide the trading brain.</p>
+        <p class="section-subtitle">FloorPricer is a Claude MCP connector. You bring your own Claude subscription and brokerage API keys. We provide the execution harness.</p>
+        <p style="font-size:0.82rem;color:#64748b;margin-top:8px;font-style:italic;">Terminal output below is illustrative of paper trading only. Not a projection of real returns.</p>
 
         <div class="terminal">
             <div class="terminal-header">
@@ -1125,6 +1132,22 @@
             </div>
         </div>
     </div>
+</section>
+
+<!-- RISK DISCLOSURE -->
+<section id="risk" style="background:#020617;padding:48px 24px;border-top:1px solid rgba(255,255,255,0.05);">
+  <div style="max-width:760px;margin:0 auto;">
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#475569;margin-bottom:14px;">Risk Disclosure</div>
+    <p style="font-size:0.84rem;color:#475569;line-height:1.75;margin-bottom:12px;">
+      FloorPricer is a software tool that automates order execution based on rules you configure. It is <strong style="color:#64748b;">not a financial advisor, broker-dealer, investment advisor, or registered investment adviser</strong>. Nothing on this site constitutes investment advice, a recommendation to buy or sell any security, or an offer to provide investment advisory services.
+    </p>
+    <p style="font-size:0.84rem;color:#475569;line-height:1.75;margin-bottom:12px;">
+      All investing involves risk, including the possible loss of all principal. Trailing stop strategies do not guarantee profits and will not prevent losses in rapidly declining markets or gaps. Past performance of any strategy shown on this site is hypothetical and illustrative only — it does not represent actual trading results and is not a guarantee of future performance.
+    </p>
+    <p style="font-size:0.84rem;color:#475569;line-height:1.75;">
+      Paper trading is provided for educational purposes only. Before trading with real money, understand the full mechanics of the strategy you are using. Consult a licensed financial professional if you are uncertain whether automated trading strategies are appropriate for your situation. FloorPricer is not affiliated with Alpaca Securities LLC or any other brokerage.
+    </p>
+  </div>
 </section>
 
 <!-- FOOTER -->
